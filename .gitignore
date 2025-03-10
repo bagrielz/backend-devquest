@@ -1,33 +1,72 @@
-HELP.md
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# IntelliJ IDEA
+.idea/
 *.iml
+*.iws
 *.ipr
+out/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
+# Maven
+target/
+*.log
 
-### VS Code ###
+# Maven wrapper
+.mvn/
+mvnw
+mvnw.cmd
+
+# Docker
+docker-compose.override.yml
+Dockerfile
+**/docker-compose.override.yml
+**/Dockerfile
+.docker/
+
+# Arquivos de configuração local
+application.yml
+.env
+
+# Logs
+logs/
+*.log
+
+# OS específicos
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Arquivos temporários
+*.class
+*.war
+*.ear
+*.jar
+*.tar.gz
+*.zip
+
+# Arquivos de backup
+*.bak
+*.swp
+*~
+
+# JRebel
+rebel.xml
+
+# Testes
+# Testcontainers - arquivos temporários gerados por containers
+test-logs/
+testcontainers/
+
+# Arquivos de banco de dados locais (PostgreSQL)
+*.pgsql
+*.db
+
+# Integração contínua
+# GitLab CI, Travis CI e outros arquivos de integração contínua
+.gitlab-ci.yml
+.travis.yml
+.circleci/
+
+# Arquivos de configuração de IDE (se houver outros IDEs no futuro)
 .vscode/
+
+# PostgreSQL (Arquivos relacionados a volumes do Docker)
+postgres_data/
