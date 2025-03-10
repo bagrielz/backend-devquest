@@ -24,6 +24,8 @@ Dockerfile
 # Arquivos de configuração local
 application.yml
 .env
+.gitattributes
+HELP.md
 
 # Logs
 logs/
