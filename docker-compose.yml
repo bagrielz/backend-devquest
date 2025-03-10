@@ -17,9 +17,11 @@ services:
 
   api:
     container_name: devquest-api
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: maven:3.9.9-eclipse-temurin-21
+    working_dir: /api
+    volumes:
+      - .:/api
+      - ~/.m2:/root/.m2
     ports:
       - "8080:8080"
     env_file:
@@ -29,6 +31,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_AI_OPENAI_API_KEY: ${SPRING_AI_OPENAI_API_KEY}
+    command: ["./mvnw", "spring-boot:run"]
     networks:
       - devquest-network
 
