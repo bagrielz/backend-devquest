@@ -11,8 +11,6 @@ target/
 
 # Maven wrapper
 .mvn/
-mvnw
-mvnw.cmd
 
 # Docker
 docker-compose.override.yml
