@@ -31,7 +31,7 @@ services:
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
       SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
       SPRING_AI_OPENAI_API_KEY: ${SPRING_AI_OPENAI_API_KEY}
-    command: ["./mvnw", "spring-boot:run"]
+    command: ["mvn", "spring-boot:run"]
     networks:
       - devquest-network
 
