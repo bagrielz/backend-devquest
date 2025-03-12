@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: api
+  jpa:
+    hibernate:
+      ddl-auto: update
+  devtools:
+    restart:
+      enabled: true
+      exclude: static/**,public/**

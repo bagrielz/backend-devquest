@@ -20,7 +20,6 @@ Dockerfile
 .docker/
 
 # Arquivos de configuração local
-application.yml
 .env
 .gitattributes
 HELP.md
