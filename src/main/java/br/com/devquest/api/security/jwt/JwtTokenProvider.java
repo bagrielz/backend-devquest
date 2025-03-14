@@ -96,7 +96,8 @@ public class JwtTokenProvider {
   public String resolveToken(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
     if (bearerToken != null && bearerToken.startsWith("Bearer ")) return bearerToken.substring("Bearer ".length());
-    else throw new InvalidJwtAuthenticationException("Token JWT inválido!");
+
+    return null;
   }
 
   public boolean validateToken(String token) {
