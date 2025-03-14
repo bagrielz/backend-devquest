@@ -1,3 +1,11 @@
+security:
+  jwt:
+    token:
+      secret-key: ${TOKEN_JWT_SECRETKEY}
+      expire-length: ${TOKEN_JWT_EXPIRELENGTH}
+dotenv:
+  enabled: true
+  systemProperties: true
 spring:
   application:
     name: api
@@ -13,6 +21,3 @@ spring:
     restart:
       enabled: true
       exclude: static/**,public/**
-dotenv:
-  enabled: true
-  systemProperties: true
