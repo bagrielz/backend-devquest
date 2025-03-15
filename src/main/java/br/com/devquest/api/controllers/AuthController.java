@@ -2,6 +2,8 @@ package br.com.devquest.api.controllers;
 
 import br.com.devquest.api.model.dtos.security.AccountCredentialsDTO;
 import br.com.devquest.api.services.security.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "AuthController", description = "Endpoints para autenticação de usuários")
 public class AuthController {
 
   private AuthService service;
@@ -17,6 +20,7 @@ public class AuthController {
     this.service = service;
   }
 
+  @Operation(summary = "Login de usuários")
   @PostMapping("/signin")
   public ResponseEntity<?> signin(@RequestBody AccountCredentialsDTO credentialsDTO) {
     if (credentialsAreInvalid(credentialsDTO))
@@ -27,6 +31,7 @@ public class AuthController {
     return ResponseEntity.ok(token);
   }
 
+  @Operation(summary = "Atualização de token JWT")
   @PutMapping("/refresh/{username}")
   public ResponseEntity<?> refreshToken(@PathVariable("username") String username,
                                         @RequestHeader("Authorization") String refreshToken) {
