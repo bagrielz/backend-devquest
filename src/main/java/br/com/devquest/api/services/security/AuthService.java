@@ -38,7 +38,6 @@ public class AuthService {
     }
 
     var user = userRepository.findByUsername(credentials.getUsername());
-    if (user == null) throw new UsernameNotFoundException("Usuário " +credentials.getUsername()+ " não encontrado!");
     var tokenResponse = tokenProvider.createAccessToken(credentials.getUsername(), user.getRoles());
     return ResponseEntity.ok(tokenResponse);
   }

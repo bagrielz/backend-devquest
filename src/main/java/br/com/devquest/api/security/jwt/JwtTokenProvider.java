@@ -109,7 +109,6 @@ public class JwtTokenProvider {
   public String resolveToken(HttpServletRequest request) {
     String token = request.getHeader("Authorization");
     if (tokenContainsBearer(token)) return token.substring("Bearer ".length());
-
     return null;
   }
 
