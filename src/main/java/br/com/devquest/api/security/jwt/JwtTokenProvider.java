@@ -58,9 +58,10 @@ public class JwtTokenProvider {
   }
 
   public TokenDTO refreshToken(String refreshToken) {
-    if (tokenContainsBearer(refreshToken)) refreshToken.substring("Bearer ".length());
+    var token = "";
+    if (tokenContainsBearer(refreshToken)) token = refreshToken.substring("Bearer ".length());
     JWTVerifier verifier = JWT.require(algorithm).build();
-    DecodedJWT decodedJWT = verifier.verify(refreshToken);
+    DecodedJWT decodedJWT = verifier.verify(token);
     var username = decodedJWT.getSubject();
     List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 
