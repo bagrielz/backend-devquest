@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -72,11 +73,19 @@ class AuthServiceTest {
       service.signin(credentialsWithIncorrectUsernameOrPassword);
     });
 
+    assertEquals(InvalidCredentialsException.class, exception.getClass());
     assertTrue("Usuário ou senha incorretos!".equals(exception.getMessage()));
   }
 
   @Test
-  void refreshToken() {
+  void refreshTokenWithAnInvalidUsername() {
+    when(userRepository.findByUsername(anyString())).thenReturn(null);
+    Exception exception = assertThrows(UsernameNotFoundException.class, () -> {
+      service.refreshToken("invalidUsername", "exampleOfRefreshToken");
+    });
+
+    assertEquals(UsernameNotFoundException.class, exception.getClass());
+    assertTrue("Usuário invalidUsername não encontrado".equals(exception.getMessage()));
   }
 
 }
