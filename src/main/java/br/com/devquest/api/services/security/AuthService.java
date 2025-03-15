@@ -1,5 +1,6 @@
 package br.com.devquest.api.services.security;
 
+import br.com.devquest.api.exceptions.InvalidCredentialsException;
 import br.com.devquest.api.model.dtos.security.AccountCredentialsDTO;
 import br.com.devquest.api.model.dtos.security.TokenDTO;
 import br.com.devquest.api.repositories.UserRepository;
@@ -7,6 +8,7 @@ import br.com.devquest.api.security.jwt.JwtTokenProvider;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +28,14 @@ public class AuthService {
   }
 
   public ResponseEntity<TokenDTO> signin(AccountCredentialsDTO credentials) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-                credentials.getUsername(),
-                credentials.getPassword()));
+    try {
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+                  credentials.getUsername(),
+                  credentials.getPassword()));
+    } catch (AuthenticationException e) {
+      throw new InvalidCredentialsException("Usuário ou senha incorretos!");
+    }
 
     var user = userRepository.findByUsername(credentials.getUsername());
     if (user == null) throw new UsernameNotFoundException("Usuário " +credentials.getUsername()+ " não encontrado!");

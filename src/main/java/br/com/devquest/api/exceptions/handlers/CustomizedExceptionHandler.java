@@ -1,10 +1,12 @@
 package br.com.devquest.api.exceptions.handlers;
 
+import br.com.devquest.api.exceptions.InvalidCredentialsException;
 import br.com.devquest.api.exceptions.InvalidJwtAuthenticationException;
 import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +28,12 @@ public class CustomizedExceptionHandler {
 
   @ExceptionHandler(InvalidJwtAuthenticationException.class)
   public final ResponseEntity<ExceptionResponse> invalidJwtAuthenticationException(Exception ex, WebRequest request) {
+    ExceptionResponse exceptionResponse = createExceptionResponse(ex, request);
+    return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(InvalidCredentialsException.class)
+  public final ResponseEntity<ExceptionResponse> invalidCredentialsException(Exception ex, WebRequest request) {
     ExceptionResponse exceptionResponse = createExceptionResponse(ex, request);
     return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
   }
