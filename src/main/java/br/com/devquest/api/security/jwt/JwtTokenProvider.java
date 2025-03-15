@@ -60,8 +60,7 @@ public class JwtTokenProvider {
   public TokenDTO refreshToken(String refreshToken) {
     var token = "";
     if (tokenContainsBearer(refreshToken)) token = refreshToken.substring("Bearer ".length());
-    JWTVerifier verifier = JWT.require(algorithm).build();
-    DecodedJWT decodedJWT = verifier.verify(token);
+    DecodedJWT decodedJWT = decodeToken(token);
     var username = decodedJWT.getSubject();
     List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
 
@@ -102,8 +101,7 @@ public class JwtTokenProvider {
   }
 
   private DecodedJWT decodeToken(String token) {
-    Algorithm alg = Algorithm.HMAC256(secretKey.getBytes());
-    JWTVerifier verifier = JWT.require(alg).build();
+    JWTVerifier verifier = JWT.require(algorithm).build();
     DecodedJWT decodedJWT = verifier.verify(token);
     return decodedJWT;
   }
