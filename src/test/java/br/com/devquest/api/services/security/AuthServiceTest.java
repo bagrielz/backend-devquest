@@ -88,4 +88,21 @@ class AuthServiceTest {
     assertTrue("Usuário invalidUsername não encontrado".equals(exception.getMessage()));
   }
 
+  @Test
+  void refreshTokenWithAValidUsername() {
+    User user = userInput.mockUser(2);
+    TokenDTO tokenDTO = tokenDTOInput.mockTokenDTO(2);
+
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    // The accessToken and refreshToken of this TokenDTO are different of the old user's accessToken and refreshToken
+    when(tokenProvider.refreshToken(anyString())).thenReturn(tokenDTO);
+    var result = service.refreshToken(user.getUsername(), "exampleOfRefreshToken");
+
+    assertEquals(HttpStatus.OK, result.getStatusCode());
+    assertEquals(true, result.getBody().getAuthenticated());
+    assertEquals(tokenDTO.getUsername(), result.getBody().getUsername());
+    assertEquals(tokenDTO.getAccessToken(), result.getBody().getAccessToken());
+    assertEquals(tokenDTO.getRefreshToken(), result.getBody().getRefreshToken());
+  }
+
 }
