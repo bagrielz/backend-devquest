@@ -1,10 +1,10 @@
-package br.com.devquest.api.unittests.security.services;
+package br.com.devquest.api.unittests.services.security;
 
 import br.com.devquest.api.exceptions.InvalidCredentialsException;
 import br.com.devquest.api.services.security.AuthService;
-import br.com.devquest.api.unittests.security.mocks.MockAccountCredentialsDTO;
-import br.com.devquest.api.unittests.security.mocks.MockTokenDTO;
-import br.com.devquest.api.unittests.security.mocks.MockUser;
+import br.com.devquest.api.unittests.mocks.MockAccountCredentialsDTO;
+import br.com.devquest.api.unittests.mocks.MockTokenDTO;
+import br.com.devquest.api.unittests.mocks.MockUser;
 import br.com.devquest.api.model.dtos.security.AccountCredentialsDTO;
 import br.com.devquest.api.model.dtos.security.TokenDTO;
 import br.com.devquest.api.model.entities.User;

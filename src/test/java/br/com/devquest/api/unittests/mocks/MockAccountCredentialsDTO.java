@@ -1,4 +1,4 @@
-package br.com.devquest.api.unittests.security.mocks;
+package br.com.devquest.api.unittests.mocks;
 
 import br.com.devquest.api.model.dtos.security.AccountCredentialsDTO;
 import lombok.NoArgsConstructor;
