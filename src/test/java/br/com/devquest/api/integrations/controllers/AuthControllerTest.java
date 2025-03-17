@@ -30,6 +30,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
   private static ObjectMapper mapper;
   private static AccountCredentialsDTOTest accountCredentialsDTO;
   private static AccountCredentialsDTOTest invalidAccountCredentials;
+  private static TokenDTOTest tokenDTOTest;
 
   @BeforeEach
   void setUp() {
@@ -63,12 +64,12 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
     JsonNode rootNode = mapper.readTree(content);
     JsonNode bodyNode = rootNode.get("body");
-    var response = mapper.treeToValue(bodyNode, TokenDTOTest.class);
+    tokenDTOTest = mapper.treeToValue(bodyNode, TokenDTOTest.class);
 
-    assertEquals("msimeaor", response.getUsername());
-    assertEquals(true, response.getAuthenticated());
-    assertNotNull(response.getAccessToken());
-    assertNotNull(response.getRefreshToken());
+    assertEquals("msimeaor", tokenDTOTest.getUsername());
+    assertEquals(true, tokenDTOTest.getAuthenticated());
+    assertNotNull(tokenDTOTest.getAccessToken());
+    assertNotNull(tokenDTOTest.getRefreshToken());
   }
 
   @Test
@@ -124,6 +125,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
             .username("matheus")
             .password("123")
             .build();
+
+    tokenDTOTest = new TokenDTOTest();
   }
 
 }
