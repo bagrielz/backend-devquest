@@ -91,6 +91,24 @@ class AuthControllerTest extends AbstractIntegrationTest {
   }
 
   @Test
+  @Order(3)
+  void signinWithNullableCredentials() throws JsonProcessingException {
+    accountCredentialsDTO.setUsername("");
+    var content = given(specification)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(accountCredentialsDTO)
+            .when()
+              .post()
+            .then()
+              .statusCode(403)
+            .extract()
+              .body()
+                .asString();
+
+    assertEquals("Usuário ou senha incorretos!", content);
+  }
+
+  @Test
   void refreshToken() {
   }
 
