@@ -61,9 +61,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
               .body()
                 .asString();
 
-    JsonNode rootNode = mapper.readTree(content);
-    JsonNode bodyNode = rootNode.get("body");
-    tokenDTOTest = mapper.treeToValue(bodyNode, TokenDTOTest.class);
+    tokenDTOTest = mapper.treeToValue(extractObjectOfJSON(content, "body"), TokenDTOTest.class);
 
     assertEquals("msimeaor", tokenDTOTest.getUsername());
     assertEquals(true, tokenDTOTest.getAuthenticated());
@@ -149,6 +147,39 @@ class AuthControllerTest extends AbstractIntegrationTest {
                 .asString();
 
     assertTrue(content.equals("Usuário não autenticado!"));
+  }
+
+  @Test
+  @Order(6)
+  void refreshTokenWithValidUsernameAndToken() throws JsonProcessingException, InterruptedException {
+    Thread.sleep(500); // Time for new token expiration validity to be updated
+    var content = given(specification)
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
+            .pathParams("username", tokenDTOTest.getUsername())
+            .header("Authorization", "Bearer " + tokenDTOTest.getRefreshToken())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+              .put("/{username}")
+            .then()
+              .statusCode(200)
+            .extract()
+              .body()
+                .asString();
+
+    var refreshTokenDTO = mapper.treeToValue(extractObjectOfJSON(content, "body"), TokenDTOTest.class);
+
+    assertEquals("msimeaor", refreshTokenDTO.getUsername());
+    assertEquals(true, refreshTokenDTO.getAuthenticated());
+    assertNotNull(refreshTokenDTO.getAccessToken());
+    assertNotNull(refreshTokenDTO.getRefreshToken());
+    // When updating the user's refreshToken, the accessToken is updated as well
+    assertNotEquals(tokenDTOTest.getAccessToken(), refreshTokenDTO.getAccessToken());
+    assertNotEquals(tokenDTOTest.getRefreshToken(), refreshTokenDTO.getRefreshToken());
+  }
+
+  private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
+    JsonNode rootNode = mapper.readTree(content);
+    return rootNode.get(nodeObject);
   }
 
   public static void startEntities() {
