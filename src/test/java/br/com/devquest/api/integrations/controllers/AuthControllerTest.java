@@ -19,8 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -32,8 +31,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
   private static AccountCredentialsDTOTest invalidAccountCredentials;
   private static TokenDTOTest tokenDTOTest;
 
-  @BeforeEach
-  void setUp() {
+  @BeforeAll
+  static void setUp() {
     mapper = new ObjectMapper();
     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     mapper.findAndRegisterModules();
@@ -112,10 +111,28 @@ class AuthControllerTest extends AbstractIntegrationTest {
   }
 
   @Test
-  void refreshToken() {
+  @Order(4)
+  void refreshTokenWithNonExistsUsername() throws JsonProcessingException {
+    var content = given(specification)
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
+            .pathParams("username", "non-exists_username")
+            .header("Authorization", tokenDTOTest.getRefreshToken())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+              .put("/{username}")
+            .then()
+              .statusCode(404)
+            .extract()
+              .body()
+                .asString();
+
+    var response = mapper.readValue(content, ExceptionResponse.class);
+
+    assertEquals("Usuário non-exists_username não encontrado", response.getMessage());
+    assertTrue(response.getDetails().contains("uri=/auth/refresh/non-exists_username"));
   }
 
-  public void startEntities() {
+  public static void startEntities() {
     accountCredentialsDTO = AccountCredentialsDTOTest.builder()
             .username("msimeaor")
             .password("123")
