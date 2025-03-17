@@ -132,6 +132,25 @@ class AuthControllerTest extends AbstractIntegrationTest {
     assertTrue(response.getDetails().contains("uri=/auth/refresh/non-exists_username"));
   }
 
+  @Test
+  @Order(5)
+  void refreshTokenWithNullableParams() {
+    var content = given(specification)
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
+            .pathParams("username", " ") // Empty username
+            .header("Authorization", tokenDTOTest.getRefreshToken())
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+              .put("/{username}")
+            .then()
+              .statusCode(403)
+            .extract()
+              .body()
+                .asString();
+
+    assertTrue(content.equals("Usuário não autenticado!"));
+  }
+
   public static void startEntities() {
     accountCredentialsDTO = AccountCredentialsDTOTest.builder()
             .username("msimeaor")
