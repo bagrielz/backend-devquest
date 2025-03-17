@@ -44,13 +44,13 @@ class AuthControllerTest extends AbstractIntegrationTest {
   void signinWithValidCredentials() throws JsonProcessingException {
     specification = new RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCAL)
-            .setBasePath("/auth/signin")
             .setPort(TestConfigs.SERVER_PORT)
             .addFilter(new RequestLoggingFilter(LogDetail.ALL))
             .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
             .build();
 
     var content = given(specification)
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(accountCredentialsDTO)
             .when()
@@ -75,6 +75,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
   @Order(2)
   void signinWithInvalidCredentials() throws JsonProcessingException {
     var content = given(specification)
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(invalidAccountCredentials)
             .when()
@@ -95,6 +96,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
   void signinWithNullableCredentials() throws JsonProcessingException {
     accountCredentialsDTO.setUsername("");
     var content = given(specification)
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(accountCredentialsDTO)
             .when()

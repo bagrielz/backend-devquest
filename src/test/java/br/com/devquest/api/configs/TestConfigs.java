@@ -7,5 +7,6 @@ public interface TestConfigs {
   String HEADER_PARAM_ORIGIN = "Origin";
 
   String ORIGIN_LOCAL = "http://localhost:8080";
+  String AUTH_CONTROLLER_BASEPATH = "/auth";
 
 }
