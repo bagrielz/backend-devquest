@@ -26,7 +26,6 @@ public class AuthController {
     if (credentialsAreInvalid(credentialsDTO))
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário ou senha incorretos!");
     var token = service.signin(credentialsDTO);
-    if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário ou senha incorretos!");
 
     return ResponseEntity.ok(token);
   }
@@ -39,7 +38,6 @@ public class AuthController {
     if (parametersAreInvalid(username, refreshToken))
       return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autenticado!");
     var token = service.refreshToken(username, refreshToken);
-    if (token == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário não autenticado!");
     return ResponseEntity.ok(token);
   }
 
