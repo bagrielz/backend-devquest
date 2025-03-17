@@ -3,6 +3,7 @@ package br.com.devquest.api.integrations.controllers;
 import br.com.devquest.api.configs.TestConfigs;
 import br.com.devquest.api.dtos.AccountCredentialsDTOTest;
 import br.com.devquest.api.dtos.TokenDTOTest;
+import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import br.com.devquest.api.integrations.AbstractIntegrationTest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -28,6 +29,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
   private static RequestSpecification specification;
   private static ObjectMapper mapper;
   private static AccountCredentialsDTOTest accountCredentialsDTO;
+  private static AccountCredentialsDTOTest invalidAccountCredentials;
 
   @BeforeEach
   void setUp() {
@@ -70,12 +72,36 @@ class AuthControllerTest extends AbstractIntegrationTest {
   }
 
   @Test
+  @Order(2)
+  void signinWithInvalidCredentials() throws JsonProcessingException {
+    var content = given(specification)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(invalidAccountCredentials)
+            .when()
+              .post()
+            .then()
+              .statusCode(403)
+            .extract()
+              .body()
+                .asString();
+
+    var response = mapper.readValue(content, ExceptionResponse.class);
+
+    assertEquals("Usuário ou senha incorretos!", response.getMessage());
+  }
+
+  @Test
   void refreshToken() {
   }
 
   public void startEntities() {
     accountCredentialsDTO = AccountCredentialsDTOTest.builder()
             .username("msimeaor")
+            .password("123")
+            .build();
+
+    invalidAccountCredentials = AccountCredentialsDTOTest.builder()
+            .username("matheus")
             .password("123")
             .build();
   }
