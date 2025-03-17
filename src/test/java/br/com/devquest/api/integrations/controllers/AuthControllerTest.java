@@ -45,13 +45,13 @@ class AuthControllerTest extends AbstractIntegrationTest {
     specification = new RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCAL)
             .setPort(TestConfigs.SERVER_PORT)
+            .setContentType(MediaType.APPLICATION_JSON_VALUE)
             .addFilter(new RequestLoggingFilter(LogDetail.ALL))
             .addFilter(new ResponseLoggingFilter(LogDetail.ALL))
             .build();
 
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(accountCredentialsDTO)
             .when()
               .post()
@@ -74,7 +74,6 @@ class AuthControllerTest extends AbstractIntegrationTest {
   void signinWithInvalidCredentials() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(invalidAccountCredentials)
             .when()
               .post()
@@ -95,7 +94,6 @@ class AuthControllerTest extends AbstractIntegrationTest {
     accountCredentialsDTO.setUsername("");
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(accountCredentialsDTO)
             .when()
               .post()
@@ -115,7 +113,6 @@ class AuthControllerTest extends AbstractIntegrationTest {
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
             .pathParams("username", "non-exists_username")
             .header("Authorization", tokenDTOTest.getRefreshToken())
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
               .put("/{username}")
             .then()
@@ -137,7 +134,6 @@ class AuthControllerTest extends AbstractIntegrationTest {
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
             .pathParams("username", " ") // Empty username
             .header("Authorization", tokenDTOTest.getRefreshToken())
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
               .put("/{username}")
             .then()
@@ -152,12 +148,11 @@ class AuthControllerTest extends AbstractIntegrationTest {
   @Test
   @Order(6)
   void refreshTokenWithValidUsernameAndToken() throws JsonProcessingException, InterruptedException {
-    Thread.sleep(500); // Time for new token expiration validity to be updated
+    Thread.sleep(1000); // Time for new token expiration validity to be updated
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
             .pathParams("username", tokenDTOTest.getUsername())
             .header("Authorization", "Bearer " + tokenDTOTest.getRefreshToken())
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
               .put("/{username}")
             .then()
@@ -172,7 +167,6 @@ class AuthControllerTest extends AbstractIntegrationTest {
     assertEquals(true, refreshTokenDTO.getAuthenticated());
     assertNotNull(refreshTokenDTO.getAccessToken());
     assertNotNull(refreshTokenDTO.getRefreshToken());
-    // When updating the user's refreshToken, the accessToken is updated as well
     assertNotEquals(tokenDTOTest.getAccessToken(), refreshTokenDTO.getAccessToken());
     assertNotEquals(tokenDTOTest.getRefreshToken(), refreshTokenDTO.getRefreshToken());
   }
