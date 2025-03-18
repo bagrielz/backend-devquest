@@ -48,6 +48,4 @@ public class UserProfile implements Serializable {
   @Column(name = "updated_at")
   private Date updatedAt;
 
-  private User user;
-
 }

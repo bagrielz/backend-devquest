@@ -29,6 +29,4 @@ public class ActivityStatistics implements Serializable {
   @Column(name = "exercises_completed")
   private Integer exercisesCompleted;
 
-  private User user;
-
 }
