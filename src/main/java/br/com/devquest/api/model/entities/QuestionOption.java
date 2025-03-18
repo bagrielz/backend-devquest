@@ -29,6 +29,8 @@ public class QuestionOption implements Serializable {
   @Column(columnDefinition = "TEXT")
   private String text;
 
+  @ManyToOne
+  @JoinColumn(name = "question_id", nullable = false)
   private Question question;
 
 }

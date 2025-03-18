@@ -48,10 +48,17 @@ public class Question implements Serializable {
   @Column(name = "created_at")
   private Date createdAt;
 
+  @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<QuestionOption> options;
 
   @ManyToMany(mappedBy = "questions", cascade = CascadeType.ALL)
   private List<User> users;
+
+  public void addOption(QuestionOption option) {
+    if (options == null) options = new ArrayList<>();
+    options.add(option);
+    option.setQuestion(this);
+  }
 
   public void addUser(User user) {
     if (users == null) users = new ArrayList<>();
