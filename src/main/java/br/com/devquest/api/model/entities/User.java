@@ -47,6 +47,11 @@ public class User implements UserDetails, Serializable {
   @Column
   private Boolean enabled;
 
+  private UserProfile userProfile;
+  private ActivityStatistics activityStatistics;
+  private List<Exercise> exercises;
+  private List<Question> questions;
+
   @ManyToMany(fetch = FetchType.EAGER)
   @JoinTable(name = "user_permission",
     joinColumns = {@JoinColumn(name = "id_user")},
