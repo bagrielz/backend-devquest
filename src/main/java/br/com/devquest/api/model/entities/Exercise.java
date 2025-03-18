@@ -1,15 +1,16 @@
 package br.com.devquest.api.model.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -26,19 +27,7 @@ public class Exercise implements Serializable {
   private Difficulty difficulty;
   private String content;
   private Date createdAt;
-  private List<Instruction> instructions;
+  private List<ExerciseInstruction> instructions;
   private List<User> users;
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null || getClass() != o.getClass()) return false;
-    Exercise exercise = (Exercise) o;
-    return Objects.equals(id, exercise.id) && Objects.equals(technology, exercise.technology) && Objects.equals(difficulty, exercise.difficulty) && Objects.equals(content, exercise.content) && Objects.equals(createdAt, exercise.createdAt) && Objects.equals(instructions, exercise.instructions) && Objects.equals(users, exercise.users);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, technology, difficulty, content, createdAt, instructions, users);
-  }
 
 }
