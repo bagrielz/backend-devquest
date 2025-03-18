@@ -1,4 +1,25 @@
 package br.com.devquest.api.model.entities;
 
-public class ExerciseInstruction {
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.io.Serializable;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Table(name = "exercise_instruction")
+public class ExerciseInstruction implements Serializable {
+
+  private static final long serialVersionUID = 1L;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String indicator;
+  private String text;
+  private Exercise exercise;
+
 }
