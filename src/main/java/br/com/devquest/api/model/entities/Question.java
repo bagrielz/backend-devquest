@@ -24,13 +24,29 @@ public class Question implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
   private Long id;
+
+  @Enumerated(EnumType.STRING)
+  @Column
   private Technology technology;
+
+  @Enumerated(EnumType.STRING)
+  @Column
   private Difficulty difficulty;
+
+  @Column(columnDefinition = "TEXT")
   private String text;
+
+  @Column(name = "correct_answer", length = 1)
   private String correctAnswer;
+
+  @Column(columnDefinition = "TEXT")
   private String justification;
+
+  @Column(name = "created_at")
   private Date createdAt;
+
   private List<QuestionOption> options;
   private List<User> users;
 

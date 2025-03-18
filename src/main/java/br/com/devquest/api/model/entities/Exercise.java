@@ -24,11 +24,23 @@ public class Exercise implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
   private Long id;
+
+  @Enumerated(EnumType.STRING)
+  @Column
   private Technology technology;
+
+  @Enumerated(EnumType.STRING)
+  @Column
   private Difficulty difficulty;
+
+  @Column(columnDefinition = "TEXT")
   private String content;
+
+  @Column(name = "created_at")
   private Date createdAt;
+
   private List<ExerciseInstruction> instructions;
   private List<User> users;
 

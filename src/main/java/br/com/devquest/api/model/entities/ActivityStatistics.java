@@ -20,9 +20,15 @@ public class ActivityStatistics implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
   private Long id;
+
+  @Column(name = "correct_questions")
   private Integer correctQuestions;
+
+  @Column(name = "exercises_completed")
   private Integer exercisesCompleted;
+
   private User user;
 
 }

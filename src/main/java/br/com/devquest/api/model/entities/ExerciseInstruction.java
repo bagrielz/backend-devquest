@@ -17,9 +17,15 @@ public class ExerciseInstruction implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
   private Long id;
+
+  @Column(length = 1)
   private String indicator;
+
+  @Column(columnDefinition = "TEXT")
   private String text;
+
   private Exercise exercise;
 
 }

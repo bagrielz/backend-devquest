@@ -20,6 +20,7 @@ public class Permission implements GrantedAuthority, Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column
   private Long id;
 
   @Column(name = "description")
