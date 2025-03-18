@@ -1,5 +1,6 @@
 package br.com.devquest.api.model.entities;
 
+import br.com.devquest.api.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
