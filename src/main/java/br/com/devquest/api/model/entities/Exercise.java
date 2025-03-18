@@ -42,7 +42,7 @@ public class Exercise implements Serializable {
   @Column(name = "created_at")
   private Date createdAt;
 
-  @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "exercise", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ExerciseInstruction> instructions;
 
   @ManyToMany(mappedBy = "exercises", cascade = CascadeType.ALL)

@@ -27,7 +27,7 @@ public class ExerciseInstruction implements Serializable {
   private String text;
 
   @ManyToOne
-  @JoinColumn(name = "exercicio_id", nullable = false)
+  @JoinColumn(name = "exercise_id", nullable = false)
   private Exercise exercise;
 
 }
