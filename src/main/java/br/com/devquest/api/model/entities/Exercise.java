@@ -42,10 +42,17 @@ public class Exercise implements Serializable {
   @Column(name = "created_at")
   private Date createdAt;
 
+  @OneToMany(mappedBy = "exercicio", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ExerciseInstruction> instructions;
 
   @ManyToMany(mappedBy = "exercises", cascade = CascadeType.ALL)
   private List<User> users;
+
+  public void addInstruction(ExerciseInstruction instruction) {
+    if (instructions == null) instructions = new ArrayList<>();
+    instructions.add(instruction);
+    instruction.setExercise(this);
+  }
 
   public void addUser(User user) {
     if (users == null) users = new ArrayList<>();

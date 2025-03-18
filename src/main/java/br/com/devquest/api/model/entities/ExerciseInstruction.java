@@ -26,6 +26,8 @@ public class ExerciseInstruction implements Serializable {
   @Column(columnDefinition = "TEXT")
   private String text;
 
+  @ManyToOne
+  @JoinColumn(name = "exercicio_id", nullable = false)
   private Exercise exercise;
 
 }
