@@ -48,9 +48,26 @@ public class User implements UserDetails, Serializable {
   @Column
   private Boolean enabled;
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_profile_id", referencedColumnName = "id")
   private UserProfile userProfile;
+
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "activity_statistics_id", referencedColumnName = "id")
   private ActivityStatistics activityStatistics;
+
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "user_exercise",
+    joinColumns = {@JoinColumn(name = "user_id")},
+    inverseJoinColumns = {@JoinColumn(name = "exercise_id")}
+  )
   private List<Exercise> exercises;
+
+  @ManyToMany(cascade = CascadeType.ALL)
+  @JoinTable(name = "user_question",
+    joinColumns = {@JoinColumn(name = "user_id")},
+    inverseJoinColumns = {@JoinColumn(name = "question_id")}
+  )
   private List<Question> questions;
 
   @ManyToMany(fetch = FetchType.EAGER)
@@ -66,6 +83,23 @@ public class User implements UserDetails, Serializable {
       roles.add(permission.getDescription());
     }
     return roles;
+  }
+
+  public void addExercise(Exercise exercise) {
+    if (exercises == null) exercises = new ArrayList<>();
+    exercises.add(exercise);
+    exercise.addUser(this);
+  }
+
+  public void addQuestion(Question question) {
+    if (questions == null) questions = new ArrayList<>();
+    questions.add(question);
+    question.addUser(this);
+  }
+
+  public void addPermission(Permission permission) {
+    if (permissions == null) permissions = new ArrayList<>();
+    permissions.add(permission);
   }
 
   @Override

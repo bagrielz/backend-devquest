@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,6 +43,13 @@ public class Exercise implements Serializable {
   private Date createdAt;
 
   private List<ExerciseInstruction> instructions;
+
+  @ManyToMany(mappedBy = "exercises", cascade = CascadeType.ALL)
   private List<User> users;
+
+  public void addUser(User user) {
+    if (users == null) users = new ArrayList<>();
+    users.add(user);
+  }
 
 }

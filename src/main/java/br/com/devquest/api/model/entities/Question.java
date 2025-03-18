@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +49,13 @@ public class Question implements Serializable {
   private Date createdAt;
 
   private List<QuestionOption> options;
+
+  @ManyToMany(mappedBy = "questions", cascade = CascadeType.ALL)
   private List<User> users;
+
+  public void addUser(User user) {
+    if (users == null) users = new ArrayList<>();
+    users.add(user);
+  }
 
 }
