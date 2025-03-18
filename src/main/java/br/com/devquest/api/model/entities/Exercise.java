@@ -1,6 +1,7 @@
 package br.com.devquest.api.model.entities;
 
 import br.com.devquest.api.enums.Difficulty;
+import br.com.devquest.api.enums.Technology;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
