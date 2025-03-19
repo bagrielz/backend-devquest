@@ -1,4 +1,4 @@
-package br.com.devquest.api.controllers;
+package br.com.devquest.api.integrations.controllers;
 
 import br.com.devquest.api.configs.TestConfigs;
 import br.com.devquest.api.dtos.AccountCredentialsDTOTest;
