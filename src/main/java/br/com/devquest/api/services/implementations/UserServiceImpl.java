@@ -1,5 +1,6 @@
 package br.com.devquest.api.services.implementations;
 
+import br.com.devquest.api.model.dtos.UserInfoDTO;
 import br.com.devquest.api.repositories.UserRepository;
 import br.com.devquest.api.services.IUserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,6 +22,11 @@ public class UserServiceImpl implements UserDetailsService, IUserService {
     var user = repository.findByUsername(username);
     if (user != null) return user;
     else throw new UsernameNotFoundException("Usuário " +username+ " não encontrado!");
+  }
+
+  @Override
+  public UserInfoDTO getUserInfo(String token) {
+    return null;
   }
 
 }
