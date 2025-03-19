@@ -4,6 +4,7 @@ import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.UserRepository;
 import br.com.devquest.api.services.implementations.UserServiceImpl;
 import br.com.devquest.api.unittests.mocks.MockUser;
+import br.com.devquest.api.utils.TokenJWTDecoder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,6 +27,8 @@ class UserServiceImplTest {
   private UserServiceImpl service;
   @Mock
   private UserRepository repository;
+  @Mock
+  private TokenJWTDecoder tokenJWTDecoder;
 
   @BeforeEach
   void setUp() {
@@ -36,12 +39,13 @@ class UserServiceImplTest {
   @Test
   void whenGetUserInfoThenReturnUserInfoDTOWithSuccess() {
     User user = userInput.mockUserWithActivityStatistics(1);
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
     when(repository.findByUsername(anyString())).thenReturn(user);
     var result = service.getUserInfo("Example-of-token");
 
     assertEquals(HttpStatus.OK, result.getStatusCode());
     assertEquals(user.getId(), result.getBody().getId());
-    assertEquals(user.getFullname(), result.getBody().Fullname());
+    assertEquals(user.getFullname(), result.getBody().getFullname());
     assertEquals(user.getActivityStatistics().getCorrectQuestions(), result.getBody().getCorrectQuestions());
     assertEquals(user.getActivityStatistics().getExercisesCompleted(), result.getBody().getExercisesCompleted());
   }
