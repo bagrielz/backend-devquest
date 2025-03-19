@@ -69,7 +69,7 @@ class UserControllerTest extends AbstractIntegrationTest {
   void whenGetUserInfoThenReturnAnUserInfoDTOWithSuccess() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.USERS_CONTROLLER_BASEPATH + "/getUserInfo")
-            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + userAccessToken)
             .when()
               .get()
             .then()
