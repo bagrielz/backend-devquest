@@ -1,9 +1,10 @@
 package br.com.devquest.api.services;
 
 import br.com.devquest.api.model.dtos.UserInfoDTO;
+import org.springframework.http.ResponseEntity;
 
 public interface IUserService {
 
-  UserInfoDTO getUserInfo(String token);
+  ResponseEntity<UserInfoDTO> getUserInfo(String token);
 
 }
