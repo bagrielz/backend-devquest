@@ -34,7 +34,8 @@ public class UserServiceImpl implements UserDetailsService, IUserService {
 
   @Override
   public ResponseEntity<UserInfoDTO> getUserInfo(String token) {
-    User user = tokenJWTDecoder.getUserByToken(token);
+    var username = tokenJWTDecoder.getUsernameByToken(token);
+    User user = repository.findByUsername(username);
     UserInfoDTO userInfoDTO = UserInfoDTO.builder()
             .id(user.getId())
             .fullname(user.getFullname())

@@ -1,6 +1,5 @@
 package br.com.devquest.api.utils;
 
-import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -34,12 +33,7 @@ public class TokenJWTDecoder {
     algorithm = Algorithm.HMAC256(secretKey.getBytes());
   }
 
-  public User getUserByToken(String token) {
-    var username = getUsernameByToken(token);
-    return userRepository.findByUsername(username);
-  }
-
-  private String getUsernameByToken(String token) {
+  public String getUsernameByToken(String token) {
     DecodedJWT decodedJWT = decodeToken(token);
     return decodedJWT.getSubject();
   }
