@@ -42,7 +42,7 @@ public class ExerciseGenerator {
   private void createAndRelateInstructionsWithExercise(String exerciseString, Exercise exercise) {
     List<String> instructionsString = getEnumeratorBetweenFlags(exerciseString, "INSTRUÇÕES:", null);
     instructionsString.forEach(instructionString -> {
-      String[] indicatorAndText = getArrayWithEnumeratorIndicatorAndText(instructionString, ".");
+      String[] indicatorAndText = getArrayWithEnumeratorIndicatorAndText(instructionString, "\\.");
       ExerciseInstruction instruction = ExerciseInstruction.builder()
               .indicator(indicatorAndText[0])
               .text(indicatorAndText[1])
