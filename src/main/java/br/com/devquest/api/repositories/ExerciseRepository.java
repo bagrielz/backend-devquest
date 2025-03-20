@@ -13,13 +13,13 @@ import java.util.List;
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise, Long> {
 
-  @Query("SELECT e FROM Exercise e WHERE e.technology =:technology AND e.difficulty =:difficulty")
+  @Query("SELECT e FROM Exercise e WHERE e.technology = :technology AND e.difficulty = :difficulty")
   List<Exercise> findByTechnologyAndDifficulty(@PathVariable("technology") Technology technology,
                                                @PathVariable("difficulty") Difficulty difficulty);
 
-  @Query(value = "SELECT COUNT(*) = 0 FROM user_exercise WHERE exercise_id =:exercise_id AND user_id =:user_id",
+  @Query(value = "SELECT COUNT(*) = 0 FROM user_exercise WHERE exercise_id = :exerciseId AND user_id = :userId",
           nativeQuery = true)
-  boolean exerciseWasNotAnsweredByUser(@PathVariable("exercise_id") Long exerciseId,
-                                        @PathVariable("user_id") Long userId);
+  boolean exerciseWasNotAnsweredByUser(@PathVariable("exerciseId") Long exerciseId,
+                                        @PathVariable("userId") Long userId);
 
 }
