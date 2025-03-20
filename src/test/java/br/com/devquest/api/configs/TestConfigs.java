@@ -9,5 +9,6 @@ public interface TestConfigs {
   String ORIGIN_LOCAL = "http://localhost:8080";
   String AUTH_CONTROLLER_BASEPATH = "/auth";
   String USERS_CONTROLLER_BASEPATH = "/api/user";
+  String EXERCISE_CONTROLLER_BASEPATH = "/api/exercises";
 
 }
