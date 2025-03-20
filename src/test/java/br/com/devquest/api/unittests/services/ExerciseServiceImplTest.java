@@ -59,4 +59,24 @@ class ExerciseServiceImplTest {
     assertEquals(exercise.getInstructions().get(0).getId(), result.getInstructionsDTO().get(0).getId());
   }
 
+  @Test
+  void mustReturnsAnExerciseAlreadyRegisteredInDatabase_ButNotAnsweredByUser() {
+    List<Exercise> exercises = exerciseInput.mockExerciseList();
+    when(repository.findByTechnologyAndDifficulty(any(Technology.class), any(Difficulty.class)))
+            .thenReturn(exercises);
+    when(tokenJWTDecoder.getUserIdByToken(anyString())).thenReturn(3L);
+    when(repository.exerciseWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(true);
+
+    Exercise firstExercise = exercises.get(0);
+    var result = service.generateExercise("Example of token", Technology.JAVA, Difficulty.BASICO);
+
+    assertEquals(firstExercise.getId(), result.getId());
+    assertEquals(firstExercise.getTechnology(), result.getTechnology());
+    assertEquals(firstExercise.getDifficulty(), result.getDifficulty());
+    assertEquals(firstExercise.getContent(), result.getContent());
+    assertEquals(firstExercise.getInstructions().get(0).getId(), result.getInstructionsDTO().get(0).getId());
+  }
+
+
+
 }
