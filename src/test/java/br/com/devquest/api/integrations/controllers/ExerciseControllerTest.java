@@ -87,6 +87,8 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     assertEquals(Technology.JAVA, exerciseDTO.getTechnology());
     assertEquals(Difficulty.BASICO, exerciseDTO.getDifficulty());
     assertEquals(3, exerciseDTO.getInstructions().size());
+    assertNotEquals("", exerciseDTO.getInstructions().get(0).getIndicator());
+    assertNotEquals("", exerciseDTO.getInstructions().get(0).getText());
   }
 
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
