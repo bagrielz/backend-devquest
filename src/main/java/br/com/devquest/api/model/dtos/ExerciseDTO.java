@@ -22,6 +22,6 @@ public class ExerciseDTO implements Serializable {
   private Technology technology;
   private Difficulty difficulty;
   private String content;
-  private List<ExerciseInstructionDTO> exercises;
+  private List<ExerciseInstructionDTO> instructions;
 
 }
