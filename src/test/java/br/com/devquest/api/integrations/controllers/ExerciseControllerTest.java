@@ -97,7 +97,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
   void answerExercise_MustThrowAnException_WhenExerciseNotExistsInDatabase() throws JsonProcessingException {
     var nonExistentExerciseId = 800L;
     var content = given(specification)
-            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
             .pathParam("id", nonExistentExerciseId) // This exerciseId does not exist in database
             .when()
@@ -111,14 +111,14 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
 
     assertTrue(exceptionResponse.getMessage().equals("Exercício com id " + nonExistentExerciseId + " não encontrado!"));
-    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answerExercise/800"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answer/800"));
   }
 
   @Test
   @Order(4)
   void answerExercise_MustReturnASuccessString() {
     var content = given(specification)
-            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
             .pathParam("id", 1L) // This exercise was generated in first test
             .when()
@@ -136,7 +136,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
   @Order(5)
   void answerExercise_MustThrowAnException_WhenExerciseHasAlreadyAnsweredByUser() throws JsonProcessingException {
     var content = given(specification)
-            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
             .pathParam("id", 1L)
             .when()
@@ -150,7 +150,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
 
     assertTrue(exceptionResponse.getMessage().equals("Este usuário já concluiu este exercício anteriormente!"));
-    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answerExercise/1"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answer/1"));
   }
 
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {

@@ -34,7 +34,7 @@ public class ExerciseController {
 
   @GetMapping("/answer/{id}")
   public ResponseEntity<String> answerExercise(@RequestHeader("Authorization") String token,
-                                          @PathParam("id") Long id) {
+                                               @PathVariable("id") Long id) {
 
     String responseString = service.answerExercise(token, id);
     return new ResponseEntity<>(responseString, HttpStatus.OK);
