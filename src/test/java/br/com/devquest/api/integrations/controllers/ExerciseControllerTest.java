@@ -132,6 +132,27 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     assertTrue(content.equals("Exercício resolvido com sucesso!"));
   }
 
+  @Test
+  @Order(5)
+  void answerExercise_MustThrowAnException_WhenExerciseHasAlreadyAnsweredByUser() throws JsonProcessingException {
+    var content = given(specification)
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", 1L)
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(409)
+            .extract()
+              .body()
+                .asString();
+
+    var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
+
+    assertTrue(exceptionResponse.getMessage().equals("Este usuário já concluiu este exercício anteriormente!"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answerExercise/1"));
+  }
+
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
     JsonNode rootNode = mapper.readTree(content);
     return rootNode.get(nodeObject);
