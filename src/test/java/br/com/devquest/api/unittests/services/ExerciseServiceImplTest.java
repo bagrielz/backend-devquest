@@ -2,6 +2,8 @@ package br.com.devquest.api.unittests.services;
 
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.ActivityAlreadyAnsweredByUserException;
+import br.com.devquest.api.exceptions.ResourceNotFoundException;
 import br.com.devquest.api.model.entities.Exercise;
 import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.ExerciseRepository;
@@ -24,8 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(MockitoExtension.class)
@@ -141,7 +143,7 @@ class ExerciseServiceImplTest {
     });
 
     assertEquals(ResourceNotFoundException.class, exception.getClass());
-    assertEquals("Exercício com id " + invalidExerciseId + " não encontrado!", exception.getClass());
+    assertEquals("Exercício com id " + invalidExerciseId + " não encontrado!", exception.getMessage());
   }
 
   @Test
@@ -154,12 +156,12 @@ class ExerciseServiceImplTest {
     when(userRepository.findByUsername(anyString())).thenReturn(user);
     when(repository.exerciseWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(false);
 
-    Exception exception = assertThrows(ActivityAlreadyAnsweredByUser.class, () -> {
+    Exception exception = assertThrows(ActivityAlreadyAnsweredByUserException.class, () -> {
       service.answerExercise("Example of token", exercise.getId());
     });
 
-    assertEquals(ActivityAlreadyAnsweredByUser.class, exception.getClass());
-    assertEquals("Este usuário já concluiu este exercício anteriormente!", exception.getClass());
+    assertEquals(ActivityAlreadyAnsweredByUserException.class, exception.getClass());
+    assertEquals("Este usuário já concluiu este exercício anteriormente!", exception.getMessage());
   }
 
 }
