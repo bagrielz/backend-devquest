@@ -144,4 +144,22 @@ class ExerciseServiceImplTest {
     assertEquals("Exercício com id " + invalidExerciseId + " não encontrado!", exception.getClass());
   }
 
+  @Test
+  void mustThrowAnException_WhenExerciseExistsInDatabse_ButItsAlreadyAnsweredByUser() {
+    Exercise exercise = exerciseInput.mockExercise(1);
+    User user = userInput.mockUserWithActivityStatistics(1);
+
+    when(repository.findById(anyLong())).thenReturn(Optional.of(exercise));
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(repository.exerciseWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(false);
+
+    Exception exception = assertThrows(ActivityAlreadyAnsweredByUser.class, () -> {
+      service.answerExercise("Example of token", exercise.getId());
+    });
+
+    assertEquals(ActivityAlreadyAnsweredByUser.class, exception.getClass());
+    assertEquals("Este usuário já concluiu este exercício anteriormente!", exception.getClass());
+  }
+
 }
