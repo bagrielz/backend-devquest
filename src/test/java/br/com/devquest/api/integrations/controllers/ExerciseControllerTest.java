@@ -5,6 +5,7 @@ import br.com.devquest.api.dtos.AccountCredentialsDTOTest;
 import br.com.devquest.api.dtos.TokenDTOTest;
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import br.com.devquest.api.integrations.AbstractIntegrationTest;
 import br.com.devquest.api.model.dtos.ExerciseDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -89,6 +90,28 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     assertEquals(3, exerciseDTO.getInstructions().size());
     assertNotEquals("", exerciseDTO.getInstructions().get(0).getIndicator());
     assertNotEquals("", exerciseDTO.getInstructions().get(0).getText());
+  }
+
+  @Test
+  @Order(3)
+  void answerExercise_MustThrowAnException_WhenExerciseNotExistsInDatabase() throws JsonProcessingException {
+    var nonExistentExerciseId = 800L;
+    var content = given(specification)
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParams("id", nonExistentExerciseId) // This exerciseId does not exist in database
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(404)
+            .extract()
+              .body()
+                .asString();
+
+    var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
+
+    assertTrue(exceptionResponse.getMessage().equals("Exercício com id " + nonExistentExerciseId + " não encontrado!"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answerExercise/800"));
   }
 
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
