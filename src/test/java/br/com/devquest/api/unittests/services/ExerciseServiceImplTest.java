@@ -130,4 +130,18 @@ class ExerciseServiceImplTest {
     verify(userRepository).save(user);
   }
 
+  @Test
+  void mustThrowAnException_WhenExerciseNotExistsInDatabase() {
+    Long invalidExerciseId = 800L;
+
+    when(repository.findById(anyLong())).thenReturn(Optional.empty());
+
+    Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
+      service.answerExercise("example of token", invalidExerciseId);
+    });
+
+    assertEquals(ResourceNotFoundException.class, exception.getClass());
+    assertEquals("Exercício com id " + invalidExerciseId + " não encontrado!", exception.getClass());
+  }
+
 }
