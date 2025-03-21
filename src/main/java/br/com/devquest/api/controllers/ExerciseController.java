@@ -32,6 +32,7 @@ public class ExerciseController {
     return new ResponseEntity<>(exerciseDTO, HttpStatus.OK);
   }
 
+  @Operation(summary = "Responder um exercício")
   @GetMapping("/answer/{id}")
   public ResponseEntity<String> answerExercise(@RequestHeader("Authorization") String token,
                                                @PathVariable("id") Long id) {
