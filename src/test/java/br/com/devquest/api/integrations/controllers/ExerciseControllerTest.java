@@ -5,6 +5,7 @@ import br.com.devquest.api.dtos.AccountCredentialsDTOTest;
 import br.com.devquest.api.dtos.TokenDTOTest;
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import br.com.devquest.api.integrations.AbstractIntegrationTest;
 import br.com.devquest.api.model.dtos.ExerciseDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -89,6 +90,67 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     assertEquals(3, exerciseDTO.getInstructions().size());
     assertNotEquals("", exerciseDTO.getInstructions().get(0).getIndicator());
     assertNotEquals("", exerciseDTO.getInstructions().get(0).getText());
+  }
+
+  @Test
+  @Order(3)
+  void answerExercise_MustThrowAnException_WhenExerciseNotExistsInDatabase() throws JsonProcessingException {
+    var nonExistentExerciseId = 800L;
+    var content = given(specification)
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", nonExistentExerciseId) // This exerciseId does not exist in database
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(404)
+            .extract()
+              .body()
+                .asString();
+
+    var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
+
+    assertTrue(exceptionResponse.getMessage().equals("Exercício com id " + nonExistentExerciseId + " não encontrado!"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answer/800"));
+  }
+
+  @Test
+  @Order(4)
+  void answerExercise_MustReturnASuccessString() {
+    var content = given(specification)
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", 1L) // This exercise was generated in first test
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(200)
+            .extract()
+              .body()
+                .asString();
+
+    assertTrue(content.equals("Exercício resolvido com sucesso!"));
+  }
+
+  @Test
+  @Order(5)
+  void answerExercise_MustThrowAnException_WhenExerciseHasAlreadyAnsweredByUser() throws JsonProcessingException {
+    var content = given(specification)
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", 1L)
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(409)
+            .extract()
+              .body()
+                .asString();
+
+    var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
+
+    assertTrue(exceptionResponse.getMessage().equals("Este usuário já concluiu este exercício anteriormente!"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answer/1"));
   }
 
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {

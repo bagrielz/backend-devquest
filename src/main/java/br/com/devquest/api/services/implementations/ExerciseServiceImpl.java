@@ -2,6 +2,8 @@ package br.com.devquest.api.services.implementations;
 
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.ActivityAlreadyAnsweredByUserException;
+import br.com.devquest.api.exceptions.ResourceNotFoundException;
 import br.com.devquest.api.model.dtos.ExerciseDTO;
 import br.com.devquest.api.model.entities.Exercise;
 import br.com.devquest.api.model.entities.User;
@@ -14,7 +16,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import static br.com.devquest.api.mappers.DozerMapper.*;
+
+import static br.com.devquest.api.mappers.DozerMapper.parseObject;
 
 @Service
 public class ExerciseServiceImpl implements IExerciseService {
@@ -52,11 +55,33 @@ public class ExerciseServiceImpl implements IExerciseService {
     return parseObject(exercise, ExerciseDTO.class);
   }
 
+  @Transactional
+  @Override
+  public String answerExercise(String token, Long exerciseId) {
+    Exercise exercise = repository.findById(exerciseId)
+            .orElseThrow(() -> new ResourceNotFoundException("Exercício com id " + exerciseId + " não encontrado!"));
+    User user = userRepository.findByUsername(tokenJWTDecoder.getUsernameByToken(token));
+    if (userAlreadyAnsweredExercise(user.getId(), exercise.getId()))
+      throw new ActivityAlreadyAnsweredByUserException("Este usuário já concluiu este exercício anteriormente!");
+    registerAnswer(user, exercise);
+    return "Exercício resolvido com sucesso!";
+  }
+
   private Exercise searchForExerciseNotAnsweredByUser(List<Exercise> exercises, User user) {
     return exercises.stream()
             .filter(e -> repository.exerciseWasNotAnsweredByUser(e.getId(), user.getId()))
             .findFirst()
             .orElse(null);
+  }
+
+  private boolean userAlreadyAnsweredExercise(Long userId, Long exerciseId) {
+    return !repository.exerciseWasNotAnsweredByUser(exerciseId, userId);
+  }
+
+  private void registerAnswer(User user, Exercise exercise) {
+    user.addExercise(exercise);
+    user.getActivityStatistics().setExercisesCompleted(user.getActivityStatistics().getExercisesCompleted() + 1);
+    userRepository.save(user);
   }
 
 }
