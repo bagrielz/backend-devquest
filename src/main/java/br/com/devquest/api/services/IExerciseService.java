@@ -7,5 +7,6 @@ import br.com.devquest.api.model.dtos.ExerciseDTO;
 public interface IExerciseService {
 
   ExerciseDTO generateExercise(String token, Technology technology, Difficulty difficulty);
+  String answerExercise(String token, Long exerciseId);
 
 }
