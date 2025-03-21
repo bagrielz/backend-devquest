@@ -22,6 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,6 +109,25 @@ class ExerciseServiceImplTest {
     assertEquals(exercise.getDifficulty(), result.getDifficulty());
     assertEquals(exercise.getContent(), result.getContent());
     assertEquals(exercise.getInstructions().get(0).getId(), result.getInstructions().get(0).getId());
+  }
+
+  @Test
+  void mustReturnsASuccessString_WhenExerciseExistsAndUserHasNotAnsweredIt() {
+    Exercise exercise = exerciseInput.mockExercise(1);
+    User user = userInput.mockUserWithActivityStatistics(1);
+    var userExercisesCompletedBeforeTest = user.getActivityStatistics().getExercisesCompleted();
+
+    when(repository.findById(anyLong())).thenReturn(Optional.of(exercise));
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(repository.exerciseWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(true);
+
+    var result = service.answerExercise("Example of token", exercise.getId());
+
+    assertEquals("Exercício resolvido com sucesso!", result);
+    assertTrue(user.getExercises().contains(exercise));
+    assertTrue(user.getActivityStatistics().getExercisesCompleted() > userExercisesCompletedBeforeTest);
+    verify(userRepository).save(user);
   }
 
 }
