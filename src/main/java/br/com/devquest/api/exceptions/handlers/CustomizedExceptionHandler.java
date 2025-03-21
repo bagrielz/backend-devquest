@@ -1,7 +1,9 @@
 package br.com.devquest.api.exceptions.handlers;
 
+import br.com.devquest.api.exceptions.ActivityAlreadyAnsweredByUserException;
 import br.com.devquest.api.exceptions.InvalidCredentialsException;
 import br.com.devquest.api.exceptions.InvalidJwtAuthenticationException;
+import br.com.devquest.api.exceptions.ResourceNotFoundException;
 import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,18 @@ public class CustomizedExceptionHandler {
   public final ResponseEntity<ExceptionResponse> invalidCredentialsException(Exception ex, WebRequest request) {
     ExceptionResponse exceptionResponse = createExceptionResponse(ex, request);
     return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<ExceptionResponse> resourceNotFoundException(Exception ex, WebRequest request) {
+      ExceptionResponse exceptionResponse = createExceptionResponse(ex, request);
+      return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(ActivityAlreadyAnsweredByUserException.class)
+    public final ResponseEntity<ExceptionResponse> activityAlreadyAnsweredByUserException(Exception ex, WebRequest request) {
+      ExceptionResponse exceptionResponse = createExceptionResponse(ex, request);
+      return new ResponseEntity<>(exceptionResponse, HttpStatus.CONFLICT);
   }
 
   private static ExceptionResponse createExceptionResponse(Exception ex, WebRequest request) {
