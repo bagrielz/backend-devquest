@@ -2,6 +2,8 @@ package br.com.devquest.api.services.implementations;
 
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.ActivityAlreadyAnsweredByUserException;
+import br.com.devquest.api.exceptions.ResourceNotFoundException;
 import br.com.devquest.api.model.dtos.ExerciseDTO;
 import br.com.devquest.api.model.entities.Exercise;
 import br.com.devquest.api.model.entities.User;
@@ -14,7 +16,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import static br.com.devquest.api.mappers.DozerMapper.*;
+
+import static br.com.devquest.api.mappers.DozerMapper.parseObject;
 
 @Service
 public class ExerciseServiceImpl implements IExerciseService {
