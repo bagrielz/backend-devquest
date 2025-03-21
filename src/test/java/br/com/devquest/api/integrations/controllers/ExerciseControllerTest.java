@@ -99,7 +99,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
-            .pathParams("id", nonExistentExerciseId) // This exerciseId does not exist in database
+            .pathParam("id", nonExistentExerciseId) // This exerciseId does not exist in database
             .when()
               .get("/{id}")
             .then()
@@ -112,6 +112,24 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
     assertTrue(exceptionResponse.getMessage().equals("Exercício com id " + nonExistentExerciseId + " não encontrado!"));
     assertTrue(exceptionResponse.getDetails().equals("uri=/api/exercises/answerExercise/800"));
+  }
+
+  @Test
+  @Order(4)
+  void answerExercise_MustReturnASuccessString() {
+    var content = given(specification)
+            .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answerExercise")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", 1L) // This exercise was generated in first test
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(200)
+            .extract()
+              .body()
+                .asString();
+
+    assertTrue(content.equals("Exercício resolvido com sucesso!"));
   }
 
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
