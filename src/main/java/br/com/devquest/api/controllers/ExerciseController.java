@@ -6,6 +6,7 @@ import br.com.devquest.api.model.dtos.ExerciseDTO;
 import br.com.devquest.api.services.IExerciseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,14 @@ public class ExerciseController {
 
     ExerciseDTO exerciseDTO = service.generateExercise(token, technology, difficulty);
     return new ResponseEntity<>(exerciseDTO, HttpStatus.OK);
+  }
+
+  @GetMapping("/answer/{id}")
+  public ResponseEntity<String> answerExercise(@RequestHeader("Authorization") String token,
+                                          @PathParam("id") Long id) {
+
+    String responseString = service.answerExercise(token, id);
+    return new ResponseEntity<>(responseString, HttpStatus.OK);
   }
 
 }
