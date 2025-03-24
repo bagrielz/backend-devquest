@@ -114,6 +114,24 @@ class QuestionControllerTest extends AbstractIntegrationTest {
     assertTrue(exceptionResponse.getDetails().equals("uri=/api/questions/answer/800"));
   }
 
+  @Test
+  @Order(3)
+  void mustReturnASuccessMessage_WhenAnswerQuestionWithValidParams() {
+    var content = given(specification)
+            .basePath(TestConfigs.QUESTION_CONTROLLER_BASEPATH + "/answer")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", 1L) // This question was generated in first test
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(200)
+            .extract()
+              .body()
+                .asString();
+
+    assertTrue(content.equals("Questão respondida com sucesso!"));
+  }
+
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
     JsonNode rootNode = mapper.readTree(content);
     return rootNode.get(nodeObject);
