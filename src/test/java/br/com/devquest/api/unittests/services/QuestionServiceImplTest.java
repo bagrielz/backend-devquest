@@ -4,6 +4,7 @@ import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.Question;
+import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.QuestionRepository;
 import br.com.devquest.api.repositories.UserRepository;
@@ -93,6 +94,27 @@ class QuestionServiceImplTest {
     assertEquals(firstQuestion.getDifficulty(), result.getDifficulty());
     assertEquals(firstQuestion.getText(), result.getText());
     assertEquals(firstQuestion.getOptions().get(0).getId(), result.getOptions().get(0).getId());
+  }
+
+  @Test
+  void mustReturnsANewQuestionDTO_WhenAlreadyExistsQuestionsInDatabase_ButAllOfThemAnsweredByUser() {
+    List<Question> questions = questionInput.mockQuestionList();
+    Question question = questionInput.mockQuestion(15);
+    User user = userInput.mockUser(1);
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
+    when(repository.findByTechnologyAndDifficulty(any(Technology.class), any(Difficulty.class)))
+            .thenReturn(questions);
+    when(repository.questionWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(false);
+    when(questionGenerator.createAndSave(any(Technology.class), any(Difficulty.class))).thenReturn(question);
+
+    var result = service.generateQuestion("Example of token", Technology.JAVA, Difficulty.BASICO);
+
+    assertEquals(question.getId(), result.getId());
+    assertEquals(question.getTechnology(), result.getTechnology());
+    assertEquals(question.getDifficulty(), result.getDifficulty());
+    assertEquals(question.getText(), result.getText());
+    assertEquals(question.getOptions().get(0).getId(), result.getOptions().get(0).getId());
   }
 
 }
