@@ -142,4 +142,23 @@ class QuestionServiceImplTest {
     verify(userRepository).save(user);
   }
 
+  @Test
+  void mustReturnsASuccessString_WhenQuestionExists_UserHasNotAnsweredIt_AndStatusIsIncorrect() {
+    Question question = questionInput.mockQuestion(1);
+    User user = userInput.mockUserWithActivityStatistics(1);
+    Integer userCorrectQuestionsBeforeTest = user.getActivityStatistics().getCorrectQuestions();
+
+    when(repository.findById(anyLong())).thenReturn(Optional.of(question));
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn("Example of token");
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(repository.questionWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(true);
+
+    var result = service.answerQuestion("Example of token", question.getId(), Status.INCORRETO);
+
+    assertEquals("Questão respondida com sucesso!", result);
+    assertTrue(user.getQuestions().contains(question));
+    assertTrue(user.getActivityStatistics().getCorrectQuestions() == userCorrectQuestionsBeforeTest);
+    verify(userRepository).save(user);
+  }
+
 }
