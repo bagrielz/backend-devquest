@@ -4,6 +4,7 @@ import br.com.devquest.api.configs.TestConfigs;
 import br.com.devquest.api.dtos.AccountCredentialsDTOTest;
 import br.com.devquest.api.dtos.TokenDTOTest;
 import br.com.devquest.api.enums.Difficulty;
+import br.com.devquest.api.enums.Status;
 import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import br.com.devquest.api.integrations.AbstractIntegrationTest;
@@ -99,6 +100,7 @@ class QuestionControllerTest extends AbstractIntegrationTest {
     var content = given(specification)
             .basePath(TestConfigs.QUESTION_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .param("status", Status.CORRETO)
             .pathParam("id", nonExistentQuestionId) // This questionId does not exist in database
             .when()
               .get("/{id}")
@@ -120,6 +122,7 @@ class QuestionControllerTest extends AbstractIntegrationTest {
     var content = given(specification)
             .basePath(TestConfigs.QUESTION_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .param("status", Status.CORRETO)
             .pathParam("id", 1L) // This question was generated in first test
             .when()
               .get("/{id}")
@@ -138,6 +141,7 @@ class QuestionControllerTest extends AbstractIntegrationTest {
     var content = given(specification)
             .basePath(TestConfigs.QUESTION_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .param("status", Status.CORRETO)
             .pathParam("id", 1L)
             .when()
               .get("/{id}")
