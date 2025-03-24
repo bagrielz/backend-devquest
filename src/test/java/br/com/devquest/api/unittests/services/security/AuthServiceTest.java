@@ -50,7 +50,7 @@ class AuthServiceTest {
   }
 
   @Test
-  void signinWithValidCredentials() {
+  void mustReturnATokenDTO_WhenSigninWithValidCredentials() {
     AccountCredentialsDTO accountWithValidCredentials = accountCredentialsDTOInput.generateAccountCredentialsDTO(0);
     User user = userInput.mockUser(1);
     TokenDTO tokenDTO = tokenDTOInput.mockTokenDTO(1);
@@ -67,7 +67,7 @@ class AuthServiceTest {
   }
 
   @Test
-  void signinWithInvalidCredentials() {
+  void mustThrowAnException_WhenSigninWithInvalidCredentials() {
     AccountCredentialsDTO credentialsWithIncorrectUsernameOrPassword = accountCredentialsDTOInput.generateAccountCredentialsDTO(1);
     when(authenticationManager.authenticate(any())).thenThrow(new InvalidCredentialsException("Usuário ou senha incorretos!"));
     Exception exception = assertThrows(InvalidCredentialsException.class, () -> {
@@ -79,7 +79,7 @@ class AuthServiceTest {
   }
 
   @Test
-  void refreshTokenWithAnInvalidUsername() {
+  void mustThrowAnException_WhenRefreshTokenWithInvalidUsername() {
     when(userRepository.findByUsername(anyString())).thenReturn(null);
     Exception exception = assertThrows(UsernameNotFoundException.class, () -> {
       service.refreshToken("invalidUsername", "exampleOfRefreshToken");
@@ -90,7 +90,7 @@ class AuthServiceTest {
   }
 
   @Test
-  void refreshTokenWithAValidUsername() {
+  void mustReturnATokenDTO_WhenRefreshTokenWithValidParams() {
     User user = userInput.mockUser(2);
     TokenDTO tokenDTO = tokenDTOInput.mockTokenDTO(2);
 
