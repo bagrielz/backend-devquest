@@ -1,6 +1,7 @@
 package br.com.devquest.api.unittests.services;
 
 import br.com.devquest.api.enums.Difficulty;
+import br.com.devquest.api.enums.Status;
 import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.Question;
@@ -24,11 +25,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -118,6 +121,25 @@ class QuestionServiceImplTest {
     assertEquals(question.getDifficulty(), result.getDifficulty());
     assertEquals(question.getText(), result.getText());
     assertEquals(question.getOptions().get(0).getId(), result.getOptions().get(0).getId());
+  }
+
+  @Test
+  void mustReturnsASuccessString_WhenQuestionExists_UserHasNotAnsweredIt_AndStatusIsCorrect() {
+    Question question = questionInput.mockQuestion(1);
+    User user = userInput.mockUserWithActivityStatistics(1);
+    Integer userCorrectQuestionsBeforeTest = user.getActivityStatistics().getCorrectQuestions();
+
+    when(repository.findById(anyLong())).thenReturn(Optional.of(question));
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn("Example of token");
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(repository.questionWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(true);
+
+    var result = service.answerQuestion("Example of token", question.getId(), Status.CORRETO);
+
+    assertEquals("Questão respondida com sucesso!", result);
+    assertTrue(user.getQuestions().contains(question));
+    assertTrue(user.getActivityStatistics().getCorrectQuestions() > userCorrectQuestionsBeforeTest);
+    verify(userRepository).save(user);
   }
 
 }
