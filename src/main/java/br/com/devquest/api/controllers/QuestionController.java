@@ -32,6 +32,7 @@ public class QuestionController {
     return new ResponseEntity<>(questionDTO, HttpStatus.OK);
   }
 
+  @Operation(summary = "Responder uma questão")
   @GetMapping("/answer/{id}")
   public ResponseEntity<String> answer(@RequestHeader("Authorization") String token,
                                        @RequestParam("status") Status status,
