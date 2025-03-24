@@ -3,6 +3,7 @@ package br.com.devquest.api.unittests.services;
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.model.entities.Question;
+import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.QuestionRepository;
 import br.com.devquest.api.repositories.UserRepository;
@@ -20,10 +21,12 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -70,6 +73,26 @@ class QuestionServiceImplTest {
     assertEquals(1L, result.getOptions().index(0).getId());
     assertEquals("1", result.getOptions().index(0).getIndicator());
     assertEquals("Question Text " + 1, result.getOptions().index(0).getText());
+  }
+
+  @Test
+  void mustReturnsAnQuestionAlreadyRegisteredInDatabase_ButNotAnsweredByUser() {
+    List<Question> questions = questionInput.mockQuestionList();
+    User user = userInput.mockUser(1);
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
+    when(repository.findByTechnologyAndDifficulty(any(Technology.class), any(Difficulty.class)))
+            .thenReturn(questions);
+    when(repository.questionWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(true);
+
+    Question firstQuestion = questions.get(0);
+    var result = service.generateQuestion("Example of token", Technology.JAVA, Difficulty.BASICO);
+
+    assertEquals(firstQuestion.getId(), result.getId());
+    assertEquals(firstQuestion.getTechnology(), result.getTechnology());
+    assertEquals(firstQuestion.getDifficulty(), result.getDifficulty());
+    assertEquals(firstQuestion.getText(), result.getText());
+    assertEquals(firstQuestion.getOptions().get(0).getId(), result.getOptions().get(0).getId());
   }
 
 }
