@@ -3,11 +3,11 @@ package br.com.devquest.api.unittests.services;
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Status;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.ActivityAlreadyAnsweredByUserException;
 import br.com.devquest.api.exceptions.ResourceNotFoundException;
+import br.com.devquest.api.model.entities.*;
 import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.Question;
-import br.com.devquest.api.model.entities.Question;
-import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.QuestionRepository;
 import br.com.devquest.api.repositories.UserRepository;
 import br.com.devquest.api.services.generators.QuestionGenerator;
@@ -175,5 +175,24 @@ class QuestionServiceImplTest {
     assertEquals(ResourceNotFoundException.class, exception.getClass());
     assertEquals("Questão para o ID " + invalidQuestionId + " não encontrada!", exception.getMessage());
   }
+
+  @Test
+  void mustThrowAnException_WhenQuestionExistsInDatabse_ButItsAlreadyAnsweredByUser() {
+    Question question = questionInput.mockQuestion(1);
+    User user = userInput.mockUserWithActivityStatistics(1);
+
+    when(repository.findById(anyLong())).thenReturn(Optional.of(question));
+    when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
+    when(userRepository.findByUsername(anyString())).thenReturn(user);
+    when(repository.questionWasNotAnsweredByUser(anyLong(), anyLong())).thenReturn(false);
+
+    Exception exception = assertThrows(ActivityAlreadyAnsweredByUserException.class, () -> {
+      service.answerQuestion("Example of token", question.getId(), Status.CORRETO);
+    });
+
+    assertEquals(ActivityAlreadyAnsweredByUserException.class, exception.getClass());
+    assertEquals("Este usuário já respondeu essa questão!", exception.getMessage());
+  }
+
 
 }
