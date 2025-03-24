@@ -41,7 +41,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(1)
-  void mustReturnsATokenDTO_WhenSigninWithValidCredentials() throws JsonProcessingException {
+  void mustReturnATokenDTO_WhenSigninWithValidCredentials() throws JsonProcessingException {
     specification = new RequestSpecBuilder()
             .addHeader(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.ORIGIN_LOCAL)
             .setPort(TestConfigs.SERVER_PORT)
@@ -71,7 +71,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(2)
-  void mustReturnsAnErrorMessage_WhenSigninWithInvalidCredentials() throws JsonProcessingException {
+  void mustReturnAnErrorMessage_WhenSigninWithInvalidCredentials() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
             .body(invalidAccountCredentials)
@@ -90,7 +90,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(3)
-  void mustReturnsAnErrorMessage_WhenSigninWithNullableCredentials() throws JsonProcessingException {
+  void mustReturnAnErrorMessage_WhenSigninWithNullableCredentials() throws JsonProcessingException {
     accountCredentialsDTO.setUsername("");
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
@@ -108,7 +108,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(4)
-  void mustReturnsAnErrorMessage_WhenRefreshTokenWithNonExistentUsername() throws JsonProcessingException {
+  void mustReturnAnErrorMessage_WhenRefreshTokenWithNonExistentUsername() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
             .pathParams("username", "non-exists_username")
@@ -129,7 +129,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(5)
-  void mustReturnsAnErrorMessage_WhenRefreshTokenWithNullableUsername() {
+  void mustReturnAnErrorMessage_WhenRefreshTokenWithNullableUsername() {
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")
             .pathParams("username", " ") // Empty username
@@ -147,7 +147,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(6)
-  void mustReturnsATokenDTO_WhenRefreshTokenWithValidParams() throws JsonProcessingException, InterruptedException {
+  void mustReturnATokenDTO_WhenRefreshTokenWithValidParams() throws JsonProcessingException, InterruptedException {
     Thread.sleep(1000); // Time for new token expiration validity to be updated
     var content = given(specification)
             .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/refresh")

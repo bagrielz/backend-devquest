@@ -66,7 +66,7 @@ class UserControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(1)
-  void mustReturnsAnUserInfoDTO_WhenGetUserInfoWithAValidToken() throws JsonProcessingException {
+  void mustReturnAnUserInfoDTO_WhenGetUserInfoWithAValidToken() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.USERS_CONTROLLER_BASEPATH + "/getUserInfo")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, "Bearer " + userAccessToken)

@@ -69,7 +69,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(1)
-  void mustReturnsAnExerciseDTO_WhenGenerateWithValidParams() throws JsonProcessingException {
+  void mustReturnAnExerciseDTO_WhenGenerateWithValidParams() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/generate")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
@@ -116,7 +116,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(4)
-  void mustReturnsASuccessMessage_WhenAnswerExerciseWithValidParams() {
+  void mustReturnASuccessMessage_WhenAnswerExerciseWithValidParams() {
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
