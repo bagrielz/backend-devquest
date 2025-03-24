@@ -10,6 +10,7 @@ import br.com.devquest.api.repositories.UserRepository;
 import br.com.devquest.api.services.IQuestionService;
 import br.com.devquest.api.services.generators.QuestionGenerator;
 import br.com.devquest.api.utils.TokenJWTDecoder;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class QuestionServiceImpl implements IQuestionService {
     this.questionGenerator = questionGenerator;
   }
 
+  @Transactional
   @Override
   public QuestionDTO generateQuestion(String token, Technology technology, Difficulty difficulty) {
     User user = userRepository.findByUsername(tokenJWTDecoder.getUsernameByToken(token));
