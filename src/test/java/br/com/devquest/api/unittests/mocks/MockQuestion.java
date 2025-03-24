@@ -31,11 +31,11 @@ public class MockQuestion {
 
   private List<QuestionOption> mockOptions() {
     List<QuestionOption> options = new ArrayList<>();
-    for (Integer i=0 ; i<=4 ; i++) {
+    for (Integer i=1 ; i<=4 ; i++) {
       QuestionOption questionOption = QuestionOption.builder()
               .id(Integer.toUnsignedLong(i))
               .indicator("" +i+ "")
-              .text("Text" + i)
+              .text("Text " + i)
               .build();
 
       options.add(questionOption);
@@ -46,7 +46,7 @@ public class MockQuestion {
 
   public List<Question> mockQuestionList() {
     List<Question> questions = new ArrayList<>();
-    for (Integer i=0 ; i<=14 ; i++) {
+    for (Integer i=1 ; i<=14 ; i++) {
       questions.add(mockQuestion(i));
     }
 

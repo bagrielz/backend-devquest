@@ -8,6 +8,7 @@ import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.User;
 import br.com.devquest.api.repositories.QuestionRepository;
 import br.com.devquest.api.repositories.UserRepository;
+import br.com.devquest.api.services.generators.QuestionGenerator;
 import br.com.devquest.api.services.implementations.QuestionServiceImpl;
 import br.com.devquest.api.unittests.mocks.MockQuestion;
 import br.com.devquest.api.unittests.mocks.MockUser;
@@ -44,6 +45,8 @@ class QuestionServiceImplTest {
   private UserRepository userRepository;
   @Mock
   private TokenJWTDecoder tokenJWTDecoder;
+  @Mock
+  private QuestionGenerator questionGenerator;
 
   @BeforeEach
   void setUp() {
@@ -70,10 +73,10 @@ class QuestionServiceImplTest {
     assertEquals(question.getText(), result.getText());
     assertEquals(question.getCorrectAnswer(), result.getCorrectAnswer());
     assertEquals(question.getJustification(), result.getJustification());
-    assertTrue(result.getOptions().size(4));
-    assertEquals(1L, result.getOptions().index(0).getId());
-    assertEquals("1", result.getOptions().index(0).getIndicator());
-    assertEquals("Question Text " + 1, result.getOptions().index(0).getText());
+    assertEquals(4, result.getOptions().size());
+    assertEquals(1, result.getOptions().get(0).getId());
+    assertEquals("1", result.getOptions().get(0).getIndicator());
+    assertEquals("Text " + 1, result.getOptions().get(0).getText());
   }
 
   @Test
