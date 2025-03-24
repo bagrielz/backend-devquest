@@ -132,6 +132,27 @@ class QuestionControllerTest extends AbstractIntegrationTest {
     assertTrue(content.equals("Questão respondida com sucesso!"));
   }
 
+  @Test
+  @Order(4)
+  void mustThrowAnException_WhenUserTriesToAnswerAnQuestionAlreadyAnsweredForHim() throws JsonProcessingException {
+    var content = given(specification)
+            .basePath(TestConfigs.QUESTION_CONTROLLER_BASEPATH + "/answer")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", 1L)
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(409)
+            .extract()
+              .body()
+                .asString();
+
+    var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
+
+    assertTrue(exceptionResponse.getMessage().equals("Este usuário já respondeu essa questão!"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/questions/answer/1"));
+  }
+
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
     JsonNode rootNode = mapper.readTree(content);
     return rootNode.get(nodeObject);
