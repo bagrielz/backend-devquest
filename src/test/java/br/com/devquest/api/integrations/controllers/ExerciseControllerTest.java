@@ -53,7 +53,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
             .build();
 
     var content = given(specification)
-            .basePath("/auth/signin")
+            .basePath(TestConfigs.AUTH_CONTROLLER_BASEPATH + "/signin")
             .body(accountCredentialsDTO)
             .when()
             .post()

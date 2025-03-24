@@ -5,7 +5,7 @@ import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.QuestionOption;
 import br.com.devquest.api.repositories.QuestionRepository;
-import br.com.devquest.api.utils.IChatGPTClient;
+import br.com.devquest.api.utils.interfaces.IChatGPTClient;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;

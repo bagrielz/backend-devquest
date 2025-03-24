@@ -5,7 +5,7 @@ import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.model.entities.Exercise;
 import br.com.devquest.api.model.entities.ExerciseInstruction;
 import br.com.devquest.api.repositories.ExerciseRepository;
-import br.com.devquest.api.utils.ChatGPTClient;
+import br.com.devquest.api.utils.interfaces.IChatGPTClient;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,10 +17,10 @@ import static br.com.devquest.api.utils.StringParser.*;
 public class ExerciseGenerator {
 
   private ExerciseRepository repository;
-  private ChatGPTClient chatGPTClient;
+  private IChatGPTClient chatGPTClient;
 
   public ExerciseGenerator(ExerciseRepository repository,
-                           ChatGPTClient chatGPTClient) {
+                           IChatGPTClient chatGPTClient) {
 
     this.repository = repository;
     this.chatGPTClient = chatGPTClient;

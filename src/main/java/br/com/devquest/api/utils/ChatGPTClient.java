@@ -2,6 +2,7 @@ package br.com.devquest.api.utils;
 
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.utils.interfaces.IChatGPTClient;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +22,10 @@ public class ChatGPTClient implements IChatGPTClient {
     this.questionPrompt = questionPrompt;
   }
 
+  @Override
   public String generateExerciseString(Technology technology, Difficulty difficulty) {
     String clonedPrompt = clonePrompt(exercisePrompt, technology, difficulty);
-    return chatClient
-            .prompt()
-            .user(clonedPrompt)
-            .call()
-            .content();
+    return callChatGPTApiAndReturnResult(clonedPrompt);
   }
 
   @Override

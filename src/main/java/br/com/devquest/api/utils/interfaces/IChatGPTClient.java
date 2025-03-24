@@ -1,4 +1,4 @@
-package br.com.devquest.api.utils;
+package br.com.devquest.api.utils.interfaces;
 
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
