@@ -3,6 +3,7 @@ package br.com.devquest.api.unittests.services;
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Status;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.ResourceNotFoundException;
 import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.Question;
 import br.com.devquest.api.model.entities.Question;
@@ -159,6 +160,20 @@ class QuestionServiceImplTest {
     assertTrue(user.getQuestions().contains(question));
     assertTrue(user.getActivityStatistics().getCorrectQuestions() == userCorrectQuestionsBeforeTest);
     verify(userRepository).save(user);
+  }
+
+  @Test
+  void mustThrowAnException_WhenQuestionNotExistsInDatabase() {
+    Long invalidQuestionId = 800L;
+
+    when(repository.findById(anyLong())).thenReturn(Optional.empty());
+
+    Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
+      service.answerQuestion("example of token", invalidQuestionId, Status.CORRETO);
+    });
+
+    assertEquals(ResourceNotFoundException.class, exception.getClass());
+    assertEquals("Questão para o ID " + invalidQuestionId + " não encontrada!", exception.getMessage());
   }
 
 }
