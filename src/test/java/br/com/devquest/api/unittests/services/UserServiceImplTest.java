@@ -37,7 +37,7 @@ class UserServiceImplTest {
   }
 
   @Test
-  void whenGetUserInfoThenReturnUserInfoDTOWithSuccess() {
+  void mustReturnAnUserInfoDTO_WhenGetUserInfoWithValidToken() {
     User user = userInput.mockUserWithActivityStatistics(1);
     when(tokenJWTDecoder.getUsernameByToken(anyString())).thenReturn(user.getUsername());
     when(repository.findByUsername(anyString())).thenReturn(user);
