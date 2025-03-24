@@ -69,7 +69,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(1)
-  void mustReturnsAResponseEntityOfExerciseDTO() throws JsonProcessingException {
+  void mustReturnsAnExerciseDTO_WhenGenerateWithValidParams() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/generate")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
@@ -94,7 +94,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(3)
-  void answerExercise_MustThrowAnException_WhenExerciseNotExistsInDatabase() throws JsonProcessingException {
+  void mustThrownAnException_WhenAnswerExerciseWithANonExistentExerciseId() throws JsonProcessingException {
     var nonExistentExerciseId = 800L;
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
@@ -116,7 +116,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(4)
-  void answerExercise_MustReturnASuccessString() {
+  void mustReturnsASuccessMessage_WhenAnswerExerciseWithValidParams() {
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
@@ -134,7 +134,7 @@ class ExerciseControllerTest extends AbstractIntegrationTest {
 
   @Test
   @Order(5)
-  void answerExercise_MustThrowAnException_WhenExerciseHasAlreadyAnsweredByUser() throws JsonProcessingException {
+  void mustThrowAnException_WhenUserTriesToAnswerAnExerciseAlreadyAnsweredForHim() throws JsonProcessingException {
     var content = given(specification)
             .basePath(TestConfigs.EXERCISE_CONTROLLER_BASEPATH + "/answer")
             .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
