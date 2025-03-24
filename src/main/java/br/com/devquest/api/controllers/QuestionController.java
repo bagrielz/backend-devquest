@@ -1,6 +1,7 @@
 package br.com.devquest.api.controllers;
 
 import br.com.devquest.api.enums.Difficulty;
+import br.com.devquest.api.enums.Status;
 import br.com.devquest.api.enums.Technology;
 import br.com.devquest.api.model.dtos.QuestionDTO;
 import br.com.devquest.api.services.IQuestionService;
@@ -29,6 +30,16 @@ public class QuestionController {
 
     QuestionDTO questionDTO = service.generateQuestion(token, technology, difficulty);
     return new ResponseEntity<>(questionDTO, HttpStatus.OK);
+  }
+
+  @Operation(summary = "Responder uma questão")
+  @GetMapping("/answer/{id}")
+  public ResponseEntity<String> answer(@RequestHeader("Authorization") String token,
+                                       @RequestParam("status") Status status,
+                                       @PathVariable("id") Long questionId) {
+
+    String responseString = service.answerQuestion(token, questionId, status);
+    return new ResponseEntity<>(responseString, HttpStatus.OK);
   }
 
 }
