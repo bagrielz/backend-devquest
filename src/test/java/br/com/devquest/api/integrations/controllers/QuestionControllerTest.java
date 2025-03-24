@@ -5,6 +5,7 @@ import br.com.devquest.api.dtos.AccountCredentialsDTOTest;
 import br.com.devquest.api.dtos.TokenDTOTest;
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
+import br.com.devquest.api.exceptions.response.ExceptionResponse;
 import br.com.devquest.api.integrations.AbstractIntegrationTest;
 import br.com.devquest.api.model.dtos.QuestionDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -89,6 +90,28 @@ class QuestionControllerTest extends AbstractIntegrationTest {
     assertEquals(4, questionDTO.getOptions().size());
     assertNotEquals("", questionDTO.getOptions().get(0).getIndicator());
     assertNotEquals("", questionDTO.getOptions().get(0).getText());
+  }
+
+  @Test
+  @Order(2)
+  void mustThrownAnException_WhenAnswerQuestionWithANonExistentQuestionId() throws JsonProcessingException {
+    var nonExistentQuestionId = 800L;
+    var content = given(specification)
+            .basePath(TestConfigs.QUESTION_CONTROLLER_BASEPATH + "/answer")
+            .header(TestConfigs.HEADER_PARAM_AUTHORIZATION, userAccessToken)
+            .pathParam("id", nonExistentQuestionId) // This questionId does not exist in database
+            .when()
+              .get("/{id}")
+            .then()
+              .statusCode(404)
+            .extract()
+              .body()
+                .asString();
+
+    var exceptionResponse = mapper.readValue(content, ExceptionResponse.class);
+
+    assertTrue(exceptionResponse.getMessage().equals("Questão para o ID " + nonExistentQuestionId + " não encontrada!"));
+    assertTrue(exceptionResponse.getDetails().equals("uri=/api/questions/answer/800"));
   }
 
   private static JsonNode extractObjectOfJSON(String content, String nodeObject) throws JsonProcessingException {
