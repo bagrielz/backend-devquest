@@ -2,7 +2,6 @@ package br.com.devquest.api.model.dtos;
 
 import br.com.devquest.api.enums.Difficulty;
 import br.com.devquest.api.enums.Technology;
-import br.com.devquest.api.model.entities.QuestionOption;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +24,6 @@ public class QuestionDTO implements Serializable {
   private String text;
   private String correctAnswer;
   private String justification;
-  private List<QuestionOptionDTO> questions;
+  private List<QuestionOptionDTO> options;
 
 }
