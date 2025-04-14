@@ -12,13 +12,6 @@ target/
 # Maven wrapper
 .mvn/
 
-# Docker
-docker-compose.override.yml
-Dockerfile
-**/docker-compose.override.yml
-**/Dockerfile
-.docker/
-
 # Arquivos de configuração local
 .env
 .gitattributes
@@ -53,11 +46,6 @@ rebel.xml
 # Testcontainers - arquivos temporários gerados por containers
 test-logs/
 testcontainers/
-
-# Arquivos de banco de dados locais (PostgreSQL)
-*.pgsql
-*.db
-*.sql
 
 # Integração contínua
 # GitLab CI, Travis CI e outros arquivos de integração contínua
