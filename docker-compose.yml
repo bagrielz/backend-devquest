@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      POSTGRES_DB: devquest-backend
+    ports:
+      - 5433:5432
+    expose:
+      - 5433
+    networks:
+      - devquest-network
+
+  devquest:
+    image: msimeaor/devquest
+    restart: always
+    build: ./
+    working_dir: /backend-devquest
+    env_file:
+      - .env
+    environment:
+      SPRING.DATASOURCE.URL: ${SPRING_DATASOURCE_URL}
+      SPRING.DATASOURCE.USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING.DATASOURCE.PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      spring.jwt.token.secret-key: ${TOKEN_JWT_SECRETKEY}
+      spring.jwt.token.expire-length: ${TOKEN_JWT_EXPIRELENGTH}
+    command: mvn spring-boot:run
+    depends_on:
+      - db
+    ports:
+      - 80:8080
+    networks:
+      - devquest-network
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - devquest-network
+
+volumes:
+  portainer_data:
+
+networks:
+  devquest-network:
+    driver: bridge
