@@ -1,5 +1,6 @@
 package br.com.devquest.api.integrations;
 
+import org.flywaydb.core.Flyway;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -22,6 +23,14 @@ public class AbstractIntegrationTest {
 
     private static void startContainers() {
       Startables.deepStart(Stream.of(postgres)).join();
+      runFlywayMigrations();
+    }
+
+    private static void runFlywayMigrations() {
+      Flyway flyway = Flyway.configure()
+              .dataSource(postgres.getJdbcUrl(), postgres.getUsername(), postgres.getPassword())
+              .load();
+      flyway.migrate();
     }
 
     private static Map<String, String> createConnectionConfiguration() {
@@ -41,6 +50,20 @@ public class AbstractIntegrationTest {
               (Map) createConnectionConfiguration());
       environment.getPropertySources().addFirst(testcontainers);
     }
+  }
+
+  protected static void resetDatabase() {
+    Flyway flyway = Flyway.configure()
+      .dataSource(
+        Initializer.postgres.getJdbcUrl(),
+        Initializer.postgres.getUsername(),
+        Initializer.postgres.getPassword()
+      )
+      .cleanDisabled(false)
+      .load();
+
+    flyway.clean();
+    flyway.migrate();
   }
 
 }
