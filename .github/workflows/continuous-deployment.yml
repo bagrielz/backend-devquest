@@ -27,6 +27,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Debug API Key
+      run:
+        echo "API Key: ${{secrets.SPRING_AI_OPENAI_API_KEY}}"
+
     - name: Building application .jar
       env:
         TOKEN_JWT_SECRETKEY: ${{secrets.TOKEN_JWT_SECRETKEY}}
