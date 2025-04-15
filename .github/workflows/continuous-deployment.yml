@@ -35,6 +35,10 @@ jobs:
       working-directory: ./
       run: mvn clean package
 
+    - name: Debug API Key
+      run:
+        echo "API Key: ${{secrets.SPRING_AI_OPENAI_API_KEY}}"
+
     - name: Docker Compose Build
       working-directory: ./
       run: docker compose build
