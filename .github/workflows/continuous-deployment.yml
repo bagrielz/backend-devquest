@@ -27,10 +27,6 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Debug API Key
-      run:
-        echo "API Key: ${{secrets.SPRING_AI_OPENAI_API_KEY}}"
-
     - name: Building application .jar
       env:
         TOKEN_JWT_SECRETKEY: ${{secrets.TOKEN_JWT_SECRETKEY}}
@@ -48,4 +44,3 @@ jobs:
         docker tag ${{secrets.DOCKER_USERNAME}}/devquest:latest ${{secrets.DOCKER_USERNAME}}/devquest:${{github.run_id}}
         docker push ${{secrets.DOCKER_USERNAME}}/devquest:latest
         docker push ${{secrets.DOCKER_USERNAME}}/devquest:${{github.run_id}}
-#Teste 6
