@@ -1,53 +1,40 @@
+version: '3,8'
 services:
   db:
     image: postgres:latest
-    restart: always
+    container_name: postgres_db
     environment:
-      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME}
-      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      POSTGRES_DB: devquest-backend
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - 5433:5432
-    expose:
-      - 5433
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
     networks:
-      - devquest-network
+      - spring-network
 
-  devquest:
-    image: msimeaor/devquest
+  api:
+    build: .
+    container_name: devquest-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
     restart: always
-    build: ./
-    working_dir: /backend-devquest
     env_file:
       - .env
     environment:
-      SPRING.DATASOURCE.URL: ${SPRING_DATASOURCE_URL}
-      SPRING.DATASOURCE.USERNAME: ${SPRING_DATASOURCE_USERNAME}
-      SPRING.DATASOURCE.PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-      spring.jwt.token.secret-key: ${TOKEN_JWT_SECRETKEY}
-      spring.jwt.token.expire-length: ${TOKEN_JWT_EXPIRELENGTH}
-    command: mvn spring-boot:run
-    depends_on:
-      - db
-    ports:
-      - 80:8080
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      SPRING_AI_OPENAI_API_KEY: ${SPRING_AI_OPENAI_API_KEY}
     networks:
-      - devquest-network
-
-  portainer:
-    image: portainer/portainer-ce:latest
-    restart: always
-    ports:
-      - 9000:9000
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-    networks:
-      - devquest-network
-
-volumes:
-  portainer_data:
+      - spring-network
 
 networks:
-  devquest-network:
+  spring-network:
     driver: bridge
+
+volumes:
+  postgres_data:
